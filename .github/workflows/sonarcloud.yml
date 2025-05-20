@@ -27,6 +27,6 @@ jobs:
       - name: Run SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@v1
         with:
-          projectKey: <juice-shop-github-actions>
+          projectKey: <VAN-LEFIREN_juice-shop-github-actions>
           organization: <van-lefiren>
           token: ${{ secrets.SONAR_TOKEN }}
