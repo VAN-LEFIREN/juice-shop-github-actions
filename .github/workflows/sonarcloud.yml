@@ -1,0 +1,32 @@
+name: SonarCloud Scan
+
+on:
+  push:
+    branches:
+      - main           
+  pull_request:
+    branches:
+      - "*"          
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'       
+
+      - name: Install dependencies
+        run: npm install           
+
+      - name: Run SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@v1
+        with:
+          projectKey: <juice-shop-github-actions>
+          organization: <van-lefiren>
+          token: ${{ secrets.SONAR_TOKEN }}
