@@ -19,16 +19,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20  # або версія, що використовується в Juice Shop
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
-      
-      - name: Generate test coverage
-        run: npm run coverage
 
-      - name: Run tests
-        run: npm test || true  # не зупиняє процес, навіть якщо тести падають
+      - name: Run tests with coverage
+        run: npm test -- --coverage || true
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
