@@ -3,30 +3,33 @@ name: SonarCloud Scan
 on:
   push:
     branches:
-      - main           # Запуск на пуш у гілку main
+      - main
   pull_request:
-    branches:
-      - "*"            # Запуск на всі пул-реквести
+    types: [opened, synchronize, reopened]
 
 jobs:
-  sonarcloud:
+  build:
+    name: SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'       # Вказуємо версію Node.js (під джузи шоп)
+          node-version: 20  # або версія, що використовується в Juice Shop
 
       - name: Install dependencies
-        run: npm install           # Встановлюємо залежності через npm
+        run: npm install
 
-      - name: Run SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v1
+      - name: Run tests
+        run: npm test || true  # не зупиняє процес, навіть якщо тести падають
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
         with:
-          projectKey: <VAN-LEFIREN_juice-shop-github-actions>
-          organization: <van-lefiren>
-          token: ${{ secrets.SONAR_TOKEN }}
+          projectBaseDir: .
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
