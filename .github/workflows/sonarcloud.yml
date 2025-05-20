@@ -1,32 +1,32 @@
-name: SonarCloud Scan
-
+name: SonarCloud Analysis
 on:
   push:
-    branches:
-      - main           
+    branches: [ main ]
   pull_request:
-    branches:
-      - "*"          
+    types: [opened, synchronize, reopened]
 
 jobs:
   sonarcloud:
+    name: SonarCloud Scan
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'       
-
-      - name: Install dependencies
-        run: npm install           
-
-      - name: Run SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v1
-        with:
-          projectKey: <juice-shop-github-actions>
-          organization: <van-lefiren>
-          token: ${{ secrets.SONAR_TOKEN }}
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Необхідно для правильного аналізу SonarCloud
+        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: SonarCloud Scan
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Автоматично створюється GitHub
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
